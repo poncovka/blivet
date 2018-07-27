@@ -33,12 +33,11 @@ def has_fcoe():
     global _fcoe_module_loaded
     if not _fcoe_module_loaded:
         util.run_program(["modprobe", "fcoe"])
+        util.run_program(["modprobe", "bnx2fc"])
         _fcoe_module_loaded = True
-        if "bnx2x" in util.lsmod():
-            log.info("fcoe: loading bnx2fc")
-            util.run_program(["modprobe", "bnx2fc"])
 
-    return os.access("/sys/module/fcoe", os.X_OK)
+    return os.access("/sys/module/fcoe", os.X_OK) \
+        or os.access("/sys/module/bnx2fc", os.X_OK)
 
 
 class FCoE(object):
